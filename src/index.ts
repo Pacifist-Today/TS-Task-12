@@ -100,7 +100,7 @@ function DepricatedMethod (isAboutToChange: boolean){
         target: (this: This, ...args: Args) => Return,
         context: ClassMethodDecoratorContext<This, (this: This, ...args: Args) => Return>
     )   {
-        if (isAboutToChange === false) return
+        if (!isAboutToChange) return
         return function replacementMethod(this: This, ...args: Args): Return {
             console.log('deprecated method')
             const res = target.call(this, ...args)
@@ -176,6 +176,7 @@ function DepricatedMethodOld (isAbleToChange: boolean) {
                 return "smth new"
             }
         }
+        return
     }
 }
 
