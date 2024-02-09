@@ -11,29 +11,26 @@ interface IUserData {
 }
 
 class UserData implements IUserData {
+    private _email: string
 
-    _email: string
-
-
-    // @SetMinLengthDecoratorOld(13)
-    // @SetMaxLengthDecoratorOld(16)
-    // @SetEmailDecoratorOld
-    @SetMinLengthDecorator(10)
+    // @SetMinLengthDecorator(10)
     //Unable to resolve signature of method decorator when called as an expression.
     //Argument of type 'ClassSetterDecoratorContext<UserData, string> & { name: "email"; private: false; static: false; }' is not assignable to parameter of type 'ClassSetterDecoratorContext<UserData, (this: UserData, arg: any) => void>'.
     //The types of 'access.set' are incompatible between these types.
     //Type '(object: UserData, value: string) => void' is not assignable to type '(object: UserData, value: (this: UserData, arg: any) => void) => void'.
     //Types of parameters 'value' and 'value' are incompatible.
     //Type '(this: UserData, arg: any) => void' is not assignable to type 'string'.
-    @SetMaxLengthDecorator(16)
-    @SetEmailDecorator
+    // @SetMaxLengthDecorator(16)
+    // @SetEmailDecorator
+    @SetMinLengthDecoratorOld(13)
+    @SetMaxLengthDecoratorOld(16)
+    @SetEmailDecoratorOld
     set email (value: string) {
         this._email = value
     }
 
-
-    // @DepricatedMethodOld(true)
-    @DepricatedMethod(true)
+    // @DepricatedMethod(true)
+    @DepricatedMethodOld(true)
     isUnnecesseryMethod (): void {
         console.log ('lol')
     }
@@ -53,10 +50,7 @@ function SetEmailDecorator <This, Return> (
             console.log(arg)
             const res = target.call(this, arg)
             return res
-        }
-        return
-        // Type 'undefined' is not assignable to type 'Return'.
-        //'Return' could be instantiated with an arbitrary type which could be unrelated to 'undefined'
+        } else throw new Error("Incorrect email!")
     }
 }
 
@@ -73,7 +67,7 @@ function SetMaxLengthDecorator (max: number) {
                 const res = target.call(this, arg)
                 return res
             }
-            return
+            throw new Error("Incorrect maximum length!")
         }
     }
 }
@@ -91,7 +85,7 @@ function SetMinLengthDecorator (min: number) {
                 const res = target.call(this, arg)
                 return res
             }
-            return
+            throw new Error("Incorrect minimum length!")
         }
     }
 }
@@ -102,7 +96,7 @@ function DepricatedMethod (isAboutToChange: boolean){
         target: (this: This, ...args: Args) => Return,
         context: ClassMethodDecoratorContext<This, (this: This, ...args: Args) => Return>
     )   {
-        if (isAboutToChange === false) return
+        if (!isAboutToChange) return
         return function replacementMethod(this: This, ...args: Args): Return {
             console.log('deprecated method')
             const res = target.call(this, ...args)
@@ -110,13 +104,6 @@ function DepricatedMethod (isAboutToChange: boolean){
         }
     }
 }
-
-// function ClassDecorator <This, Args extends any[]> (
-//     target: new (...args: Args) => This,
-//     context: ClassDecoratorContext<new (...args: Args) => This>
-// ) {
-//     console.log('ClassDecorator')
-// }
 
 //EXPERIMENTAL DECORATORS
 
@@ -191,4 +178,3 @@ console.log(userData)
 console.log(userData.email = "new@email.com")
 console.log(userData.isUnnecesseryMethod())
 console.log(userData)
-// console.log(email.isUnnecesseryMethod())
