@@ -11,7 +11,10 @@ interface IUserData {
 }
 
 class UserData implements IUserData {
-    private _email: string
+
+    _email: string
+
+
 
     // @SetMinLengthDecorator(10)
     //Unable to resolve signature of method decorator when called as an expression.
@@ -29,8 +32,9 @@ class UserData implements IUserData {
         this._email = value
     }
 
-    // @DepricatedMethod(true)
+
     @DepricatedMethodOld(true)
+    // @DepricatedMethod(true)
     isUnnecesseryMethod (): void {
         console.log ('lol')
     }
@@ -96,7 +100,7 @@ function DepricatedMethod (isAboutToChange: boolean){
         target: (this: This, ...args: Args) => Return,
         context: ClassMethodDecoratorContext<This, (this: This, ...args: Args) => Return>
     )   {
-        if (!isAboutToChange) return
+        if (isAboutToChange === false) return
         return function replacementMethod(this: This, ...args: Args): Return {
             console.log('deprecated method')
             const res = target.call(this, ...args)
@@ -121,6 +125,7 @@ function SetEmailDecoratorOld(
             console.log("SetEmailDecoratorOld")
             set?.apply(target, args)
         }
+        else throw new Error("Incorrect email!")
     }
 }
 
@@ -137,6 +142,7 @@ function SetMaxLengthDecoratorOld (max: number) {
                 console.log("SetMaxLengthDecoratorOld")
                 set?.apply(target, args)
             }
+            else throw new Error("Incorrect maximum length!")
         }
     }
 }
@@ -154,6 +160,7 @@ function SetMinLengthDecoratorOld (min: number) {
                 console.log("SetMinLengthDecoratorOld")
                 set?.apply(target, args)
             }
+            else throw new Error("Incorrect minimum length!")
         }
     }
 }
